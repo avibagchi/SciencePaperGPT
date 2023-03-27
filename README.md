@@ -1,2 +1,2 @@
 # Science Paper GPT
-# Goals: Need GPT 4 API Key
+Goals: Need GPT 4 API Key
