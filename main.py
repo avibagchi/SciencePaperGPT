@@ -6,6 +6,7 @@ import openai
 
 import prompts
 from dotenv import load_dotenv
+import re
 
 load_dotenv()
 
@@ -25,7 +26,9 @@ def getdocs(directory: str, one_page):
         if not one_page:
             text = ""
             for page in reader.pages:
-                text += page.extract_text()
+                page_text = page.extract_text()
+                if re.search(r"results", page_text, re.IGNORECASE):
+                    text += page_text
             file_arr.append(text)
         else:
             file_arr.append(reader.pages[0].extract_text())
@@ -35,7 +38,7 @@ def getdocs(directory: str, one_page):
 
 def getRes(messages):
     res = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
+        model="gpt-4",
         messages=messages
     )
     return res
@@ -67,7 +70,7 @@ for x in results_arr:
 
 data = {'Papers': first_page_arr, 'DV from Abstract': dep_var_ab, 'DV from Results': dep_var_res}
 df = pd.DataFrame(data)
-df.to_csv("output4.csv")
+df.to_csv("output7.csv")
 
 # abstract = res["choices"][0]["message"]["content"]
 #     # print(abstract)
