@@ -12,7 +12,7 @@ import openai
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-directory_path = 'data/papers1'
+directory_path = 'data/papers2'
 papers = []
 for filename in os.listdir(directory_path):
     papers.append(filename)
@@ -39,7 +39,7 @@ def query(index: str, q: str):
 
 
 if __name__ == "__main__":
-    doc_dir, index_dir = "data/papers1", "data/index_dir"
+    doc_dir, index_dir = "data/papers2", "data/index_dir"
     index(doc_dir, index_dir)
 
     dep_var_ab_arr = []
@@ -84,6 +84,9 @@ if __name__ == "__main__":
         rec_ab_arr.append(query(f"{index_dir}/{f}", prompts.rec_ab))
         rec_res_arr.append(query(f"{index_dir}/{f}", prompts.rec_res))
 
+    # for file in os.listdir('data/index_dir'):
+    #     os.remove(file)
+
     data = {'papers': papers,
             'dep_var_ab': dep_var_ab_arr, 'dep_var_res': dep_var_res_arr,
             'ind_var_ab': ind_var_ab_arr, 'ind_var_res': ind_var_res_arr,
@@ -94,4 +97,4 @@ if __name__ == "__main__":
             'temp_ab': temp_ab_arr, 'temp_res': temp_res_arr,
             'rec_ab': rec_ab_arr, 'rec_res': rec_res_arr}
     df = pd.DataFrame(data)
-    df.to_csv("output12.csv")
+    df.to_csv("output14.csv")
