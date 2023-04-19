@@ -1,13 +1,12 @@
 import os
-
 import pandas as pd
 from llama_index import GPTListIndex, SimpleDirectoryReader
 import uuid
-
 import prompts
 from dotenv import load_dotenv
 import openai
-
+import re
+import prompts2
 
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
@@ -60,32 +59,37 @@ if __name__ == "__main__":
     rec_res_arr = []
 
     for f in os.listdir(index_dir):
-        dep_var_ab_arr.append(query(f"{index_dir}/{f}", prompts.dep_var_ab))
-        dep_var_res_arr.append(query(f"{index_dir}/{f}", prompts.dep_var_res))
+        out_ab = str(query(f"{index_dir}/{f}", prompts2.full_abstract_prompt))
+        out_res = str(query(f"{index_dir}/{f}", prompts2.full_results_prompt))
 
-        ind_var_ab_arr.append(query(f"{index_dir}/{f}", prompts.ind_var_ab))
-        ind_var_res_arr.append(query(f"{index_dir}/{f}", prompts.ind_var_res))
+        def getregex(s):
+            return r"^" + s + "\.\s+(.*)"
 
-        sample_ab_arr.append(query(f"{index_dir}/{f}", prompts.sample_ab))
-        sample_res_arr.append(query(f"{index_dir}/{f}", prompts.sample_res))
+        dep_var_ab_arr.append(re.search(getregex("2"), out_ab).group(1))
+        dep_var_res_arr.append(re.search(getregex("2"), out_res).group(1))
 
-        population_ab_arr.append(query(f"{index_dir}/{f}", prompts.population_ab))
-        population_res_arr.append(query(f"{index_dir}/{f}", prompts.population_res))
+        ind_var_ab_arr.append(re.search(getregex("3"), out_ab).group(1))
+        ind_var_res_arr.append(re.search(getregex("3"), out_res).group(1))
 
-        exp_ab_arr.append(query(f"{index_dir}/{f}", prompts.exp_ab))
-        exp_res_arr.append(query(f"{index_dir}/{f}", prompts.exp_res))
+        sample_ab_arr.append(re.search(getregex("4"), out_ab).group(1))
+        sample_res_arr.append(re.search(getregex("4"), out_res).group(1))
 
-        mech_ab_arr.append(query(f"{index_dir}/{f}", prompts.mech_ab))
-        mech_res_arr.append(query(f"{index_dir}/{f}", prompts.mech_res))
+        population_ab_arr.append(re.search(getregex("5"), out_ab).group(1))
+        population_res_arr.append(re.search(getregex("5"), out_res).group(1))
 
-        temp_ab_arr.append(query(f"{index_dir}/{f}", prompts.temp_ab))
-        temp_res_arr.append(query(f"{index_dir}/{f}", prompts.temp_res))
+        exp_ab_arr.append(re.search(getregex("6"), out_ab).group(1))
+        exp_res_arr.append(re.search(getregex("6"), out_res).group(1))
 
-        rec_ab_arr.append(query(f"{index_dir}/{f}", prompts.rec_ab))
-        rec_res_arr.append(query(f"{index_dir}/{f}", prompts.rec_res))
+        mech_ab_arr.append(re.search(getregex("7"), out_ab).group(1))
+        mech_res_arr.append(re.search(getregex("7"), out_res).group(1))
 
-    # for file in os.listdir('data/index_dir'):
-    #     os.remove(file)
+        temp_ab_arr.append(re.search(getregex("8"), out_ab).group(1))
+        temp_res_arr.append(re.search(getregex("8"), out_res).group(1))
+
+        rec_ab_arr.append(re.search(getregex("9"), out_ab).group(1))
+        rec_res_arr.append(re.search(getregex("9"), out_res).group(1))
+        break
+
 
     data = {'papers': papers,
             'dep_var_ab': dep_var_ab_arr, 'dep_var_res': dep_var_res_arr,
@@ -97,4 +101,4 @@ if __name__ == "__main__":
             'temp_ab': temp_ab_arr, 'temp_res': temp_res_arr,
             'rec_ab': rec_ab_arr, 'rec_res': rec_res_arr}
     df = pd.DataFrame(data)
-    df.to_csv("output15.csv")
+    df.to_csv("output18.csv")
