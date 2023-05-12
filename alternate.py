@@ -8,6 +8,8 @@ import openai
 import re
 import prompts2
 
+# Delete what is in data/index_dir before running
+
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
@@ -41,6 +43,7 @@ if __name__ == "__main__":
     doc_dir, index_dir = "data/papers2", "data/index_dir"
     index(doc_dir, index_dir)
 
+    full_ab_arr = []
     dep_var_ab_arr = []
     dep_var_res_arr = []
     ind_var_ab_arr = []
@@ -62,36 +65,55 @@ if __name__ == "__main__":
         out_ab = str(query(f"{index_dir}/{f}", prompts2.full_abstract_prompt))
         out_res = str(query(f"{index_dir}/{f}", prompts2.full_results_prompt))
 
+
         def getregex(s):
-            return r"^" + s + "\.\s+(.*)"
+            return s + ". ([^" + str(int(s) + 1) + "]+)"
 
-        dep_var_ab_arr.append(re.search(getregex("2"), out_ab).group(1))
-        dep_var_res_arr.append(re.search(getregex("2"), out_res).group(1))
+        m1 = re.search(getregex("1"), out_ab)
+        m2a = re.search(getregex("2"), out_ab)
+        m2b = re.search(getregex("2"), out_res)
+        m3a = re.search(getregex("3"), out_ab)
+        m3b = re.search(getregex("3"), out_res)
+        m4a = re.search(getregex("4"), out_ab)
+        m4b = re.search(getregex("4"), out_res)
+        m5a = re.search(getregex("5"), out_ab)
+        m5b = re.search(getregex("5"), out_res)
+        m6a = re.search(getregex("6"), out_ab)
+        m6b = re.search(getregex("6"), out_res)
+        m7a = re.search(getregex("7"), out_ab)
+        m7b = re.search(getregex("7"), out_res)
+        m8a = re.search(getregex("8"), out_ab)
+        m8b = re.search(getregex("8"), out_res)
+        m9a = re.search(getregex("9"), out_ab)
+        m9b = re.search(getregex("9"), out_res)
 
-        ind_var_ab_arr.append(re.search(getregex("3"), out_ab).group(1))
-        ind_var_res_arr.append(re.search(getregex("3"), out_res).group(1))
+        full_ab_arr.append(m1.group(1)) if m1 is not None else None
 
-        sample_ab_arr.append(re.search(getregex("4"), out_ab).group(1))
-        sample_res_arr.append(re.search(getregex("4"), out_res).group(1))
+        dep_var_ab_arr.append(m2a.group(1)) if m2a is not None else None
+        dep_var_res_arr.append(m2b.group(1)) if m2b is not None else None
 
-        population_ab_arr.append(re.search(getregex("5"), out_ab).group(1))
-        population_res_arr.append(re.search(getregex("5"), out_res).group(1))
+        ind_var_ab_arr.append(m3a.group(1)) if m3a is not None else None
+        ind_var_res_arr.append(m3b.group(1)) if m3b is not None else None
 
-        exp_ab_arr.append(re.search(getregex("6"), out_ab).group(1))
-        exp_res_arr.append(re.search(getregex("6"), out_res).group(1))
+        sample_ab_arr.append(m4a.group(1)) if m4a is not None else None
+        sample_res_arr.append(m4b.group(1)) if m4b is not None else None
 
-        mech_ab_arr.append(re.search(getregex("7"), out_ab).group(1))
-        mech_res_arr.append(re.search(getregex("7"), out_res).group(1))
+        population_ab_arr.append(m5a.group(1)) if m5a is not None else None
+        population_res_arr.append(m5b.group(1)) if m5b is not None else None
 
-        temp_ab_arr.append(re.search(getregex("8"), out_ab).group(1))
-        temp_res_arr.append(re.search(getregex("8"), out_res).group(1))
+        exp_ab_arr.append(m6a.group(1)) if m6a is not None else None
+        exp_res_arr.append(m6b.group(1)) if m6b is not None else None
 
-        rec_ab_arr.append(re.search(getregex("9"), out_ab).group(1))
-        rec_res_arr.append(re.search(getregex("9"), out_res).group(1))
-        break
+        mech_ab_arr.append(m7a.group(1)) if m7a is not None else None
+        mech_res_arr.append(m7b.group(1)) if m7b is not None else None
 
+        temp_ab_arr.append(m8a.group(1)) if m8a is not None else None
+        temp_res_arr.append(m8b.group(1)) if m8b is not None else None
 
-    data = {'papers': papers,
+        rec_ab_arr.append(m9a.group(1)) if m9a is not None else None
+        rec_res_arr.append(m9b.group(1)) if m9b is not None else None
+
+    data = {'papers': papers, 'full_ab_arr': full_ab_arr,
             'dep_var_ab': dep_var_ab_arr, 'dep_var_res': dep_var_res_arr,
             'ind_var_ab': ind_var_ab_arr, 'ind_var_res': ind_var_res_arr,
             'sample_var_ab': sample_ab_arr, 'sample_var_res': sample_res_arr,
@@ -101,4 +123,4 @@ if __name__ == "__main__":
             'temp_ab': temp_ab_arr, 'temp_res': temp_res_arr,
             'rec_ab': rec_ab_arr, 'rec_res': rec_res_arr}
     df = pd.DataFrame(data)
-    df.to_csv("output18.csv")
+    df.to_csv("output21.csv")
