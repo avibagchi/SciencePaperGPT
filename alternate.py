@@ -7,6 +7,8 @@ from dotenv import load_dotenv
 import openai
 import re
 import prompts2
+import numpy
+
 
 # Delete what is in data/index_dir before running
 
@@ -17,7 +19,8 @@ directory_path = 'data/papers2'
 papers = []
 for filename in os.listdir(directory_path):
     papers.append(filename)
-
+arr = numpy.asarray(papers)
+pd.DataFrame(arr).to_csv("papers_output3.csv")
 
 def index_name(f: str):
     f = f.split("/")[-1].split(".")[0]
@@ -87,33 +90,70 @@ if __name__ == "__main__":
         m9a = re.search(getregex("9"), out_ab)
         m9b = re.search(getregex("9"), out_res)
 
-        full_ab_arr.append(m1.group(1)) if m1 is not None else None
+        full_ab_arr.append(m1.group(1)) if m1 is not None else full_ab_arr.append('Invalid')
 
-        dep_var_ab_arr.append(m2a.group(1)) if m2a is not None else None
-        dep_var_res_arr.append(m2b.group(1)) if m2b is not None else None
+        dep_var_ab_arr.append(m2a.group(1)) if m2a is not None else dep_var_ab_arr.append('Invalid')
+        dep_var_res_arr.append(m2b.group(1)) if m2b is not None else dep_var_res_arr.append('Invalid')
 
-        ind_var_ab_arr.append(m3a.group(1)) if m3a is not None else None
-        ind_var_res_arr.append(m3b.group(1)) if m3b is not None else None
+        ind_var_ab_arr.append(m3a.group(1)) if m3a is not None else ind_var_ab_arr.append('Invalid')
+        ind_var_res_arr.append(m3b.group(1)) if m3b is not None else ind_var_res_arr.append('Invalid')
 
-        sample_ab_arr.append(m4a.group(1)) if m4a is not None else None
-        sample_res_arr.append(m4b.group(1)) if m4b is not None else None
+        sample_ab_arr.append(m4a.group(1)) if m4a is not None else sample_ab_arr.append('Invalid')
+        sample_res_arr.append(m4b.group(1)) if m4b is not None else sample_res_arr.append('Invalid')
 
-        population_ab_arr.append(m5a.group(1)) if m5a is not None else None
-        population_res_arr.append(m5b.group(1)) if m5b is not None else None
+        population_ab_arr.append(m5a.group(1)) if m5a is not None else population_ab_arr.append('Invalid')
+        population_res_arr.append(m5b.group(1)) if m5b is not None else population_res_arr.append('Invalid')
 
-        exp_ab_arr.append(m6a.group(1)) if m6a is not None else None
-        exp_res_arr.append(m6b.group(1)) if m6b is not None else None
+        exp_ab_arr.append(m6a.group(1)) if m6a is not None else exp_ab_arr.append('Invalid')
+        exp_res_arr.append(m6b.group(1)) if m6b is not None else exp_res_arr.append('Invalid')
 
-        mech_ab_arr.append(m7a.group(1)) if m7a is not None else None
-        mech_res_arr.append(m7b.group(1)) if m7b is not None else None
+        mech_ab_arr.append(m7a.group(1)) if m7a is not None else mech_ab_arr.append('Invalid')
+        mech_res_arr.append(m7b.group(1)) if m7b is not None else mech_res_arr.append('Invalid')
 
-        temp_ab_arr.append(m8a.group(1)) if m8a is not None else None
-        temp_res_arr.append(m8b.group(1)) if m8b is not None else None
+        temp_ab_arr.append(m8a.group(1)) if m8a is not None else temp_ab_arr.append('Invalid')
+        temp_res_arr.append(m8b.group(1)) if m8b is not None else temp_res_arr.append('Invalid')
 
-        rec_ab_arr.append(m9a.group(1)) if m9a is not None else None
-        rec_res_arr.append(m9b.group(1)) if m9b is not None else None
+        rec_ab_arr.append(m9a.group(1)) if m9a is not None else rec_ab_arr.append('Invalid')
+        rec_res_arr.append(m9b.group(1)) if m9b is not None else rec_res_arr.append('Invalid')
 
-    data = {'papers': papers, 'full_ab_arr': full_ab_arr,
+        print(full_ab_arr)
+        print(dep_var_ab_arr)
+        print(dep_var_res_arr)
+        print(ind_var_ab_arr)
+        print(ind_var_res_arr)
+        print(sample_ab_arr)
+        print(sample_res_arr)
+        print(population_ab_arr)
+        print(population_res_arr)
+        print(exp_ab_arr)
+        print(exp_res_arr)
+        print(mech_ab_arr)
+        print(mech_res_arr)
+        print(temp_ab_arr)
+        print(temp_res_arr)
+        print(rec_ab_arr)
+        print(rec_res_arr)
+
+    print(full_ab_arr)
+    print(dep_var_ab_arr)
+    print(dep_var_res_arr)
+    print(ind_var_ab_arr)
+    print(ind_var_res_arr)
+    print(sample_ab_arr)
+    print(sample_res_arr)
+    print(population_ab_arr)
+    print(population_res_arr)
+    print(exp_ab_arr)
+    print(exp_res_arr)
+    print(mech_ab_arr)
+    print(mech_res_arr)
+    print(temp_ab_arr)
+    print(temp_res_arr)
+    print(rec_ab_arr)
+    print(rec_res_arr)
+
+
+    data = {'full_ab_arr': full_ab_arr,
             'dep_var_ab': dep_var_ab_arr, 'dep_var_res': dep_var_res_arr,
             'ind_var_ab': ind_var_ab_arr, 'ind_var_res': ind_var_res_arr,
             'sample_var_ab': sample_ab_arr, 'sample_var_res': sample_res_arr,
@@ -123,4 +163,4 @@ if __name__ == "__main__":
             'temp_ab': temp_ab_arr, 'temp_res': temp_res_arr,
             'rec_ab': rec_ab_arr, 'rec_res': rec_res_arr}
     df = pd.DataFrame(data)
-    df.to_csv("output21.csv")
+    df.to_csv("output25.csv")

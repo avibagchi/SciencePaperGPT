@@ -14,12 +14,13 @@ s = \
 
 
 def getregex(s):
-    return s + ". ([^" + str(int(s) + 1) + "]+)"
+    return "1([^2.]+)"
 
 full_ab_arr = []
 
 m = re.search(getregex("7"), s)
 full_ab_arr.append(m.group(1)) if m is not None else None
+full_ab_arr.append("1")
 
 
 print(full_ab_arr)
